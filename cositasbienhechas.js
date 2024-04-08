@@ -20,6 +20,7 @@ function newUser() {
 
     newRow(usuario);
 
+    
 
 };
 

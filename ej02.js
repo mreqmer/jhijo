@@ -1,6 +1,6 @@
-let numeroUsuarios;
-let sumaEdades;
-let media;
+let numeroUsuarios=0;
+let sumaEdades=0;
+let media=0;
 let edadMax = Number.MIN_SAFE_INTEGER;
 let edadMin = Number.MAX_SAFE_INTEGER;
 
@@ -9,7 +9,7 @@ function newUser() {
     //se puede hacer con las dos formas, unos es el de nombre es el de jquery
     var nombre = $("#nombre").val();
     var apellidos = document.getElementById("apellidos").value;
-    var edad = document.getElementById("edad").value;
+    var edad = parseInt(document.getElementById("edad").value);
     var ciudad = document.getElementById("ciudad").value;
 
     let usuario = {
@@ -24,10 +24,10 @@ function newUser() {
 
         newRow(usuario);
         numeroUsuarios++;
-        this.sumaEdades += usuario.edadPersona;
-        this.media = this.sumaEdades / this.numeroUsuarios;
-        this.edadMin = min(usuario, this.edadMin);
-        this.edadMax = max(usuario, this.edadMax);
+       sumaEdades += usuario.edadPersona;
+        media = sumaEdades / numeroUsuarios;
+        edadMin = min(usuario, edadMin);
+        edadMax = max(usuario, edadMax);
         estadisticas();
 
        
@@ -65,34 +65,30 @@ function datosCorrectos(persona){
 
 };
 
-function min(persona, min){
-
-    let minimo;
+function min(persona, minimo) {
+    let minimoActual = minimo;
     
-    if(persona.edadPersona < min){
-        minimo = persona.edadPersona;
+    if(persona.edadPersona < minimoActual){
+        minimoActual = persona.edadPersona;
     }
-    return minimo;
-
+    return minimoActual;
 } 
 
-function max(persona, max){
-    let maximo;
+function max(persona, maximo) {
+    let maximoActual = maximo;
 
-    if(persona.edadPersona > max){
-        maximo = persona.edadPersona;
+    if(persona.edadPersona > maximoActual){
+        maximoActual = persona.edadPersona;
     }
 
-    return maximo;
+    return maximoActual;
 }
 
 function estadisticas(){
-    return  $("#estadisticas").html("<p>" + "Suma: " + this.sumaEdades +
-    "<br>" + "Media: " + this.media +
-    "<br>" + "Mínimo: " + this.min + 
-    "<br>" + "Máximo" + this.max);
-   
-
+    $("#estadisticas").html("<p>" + "Suma: " + sumaEdades +
+    "<br>" + "Media: " + media +
+    "<br>" + "Mínimo: " + edadMin + 
+    "<br>" + "Máximo: " + edadMax + "</p>");
 }
 
 

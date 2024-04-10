@@ -6,7 +6,7 @@ let edadMin = Number.MAX_SAFE_INTEGER;
 
 function newUser() {
 
-    //se puede hacer con las dos formas, unos es el de nombre es el de jquery
+    //se puede hacer con las dos formas, la mejor es el de nombre con jquery
     var nombre = $("#nombre").val();
     var apellidos = document.getElementById("apellidos").value;
     var edad = parseInt(document.getElementById("edad").value);
@@ -24,7 +24,7 @@ function newUser() {
 
         newRow(usuario);
         numeroUsuarios++;
-       sumaEdades += usuario.edadPersona;
+        sumaEdades += usuario.edadPersona;
         media = sumaEdades / numeroUsuarios;
         edadMin = min(usuario, edadMin);
         edadMax = max(usuario, edadMax);
@@ -54,10 +54,9 @@ function datosCorrectos(persona){
 
     let correcto = false;
 
-    if(persona.nombrePersona != "" && persona.apellidosPersona != "" && persona.edadPersona != "" && persona.ciudadPersona != ""){
+    if(persona.nombrePersona != "" && persona.apellidosPersona != "" && persona.edadPersona > 0 && persona.ciudadPersona != ""){
 
         correcto = true;
-
 
     }
 

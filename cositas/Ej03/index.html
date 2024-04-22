@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<style>
+    table, th, td {
+        border: 1px solid black;
+    }
+</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <title>Document</title>
+</head>
+
+<body>
+
+  
+    <h1>
+        COSITAS
+    </h1>
+
+    <input type="text" id="nombre" placeholder="Nombre" required>
+    <input type="text" id="apellidos" placeholder="Apellidos" required> 
+    <input type="text" id="edad" placeholder="Edad" required> 
+    <input type="text" id="ciudad" placeholder="Ciudad" required> 
+    
+    <br>
+
+    <fieldset>
+        <legend>Hobbies</legend> 
+        <input type="checkbox" id="hob1" name="hobbies" value="Deporte">
+        <label for="hob1">deporte</label>
+        <input type="checkbox" id="hob2" name="hobbies" value="Lectura">
+        <label for="hob2">lectura</label>
+        <input type="checkbox" id="hob3" name="hobbies" value="Música">
+        <label for="hob3">música</label>
+        <input type="checkbox" id="hob4" name="hobbies" value="Juegos">
+        <label for="hob4">juegos</label>
+        <input type="checkbox" id="hob5" name="hobbies" value="Cine">
+        <label for="hob5">cine</label>
+        <input type="checkbox" id="hob6" name="hobbies" value="Teatro">
+        <label for="hob6">teatro</label>
+        <input type="checkbox" id="hob7" name="hobbies" value="Coleccionismo">
+        <label for="hob7">coleccionismo</label>
+        <input type="checkbox" id="hob8" name="hobbies" value="Bricolaje">
+        <label for="hob8">bricolaje</label>
+        <input type="checkbox" id="hob9" name="hobbies" value="Cosplay">
+        <label for="hob8">cosplay</label>
+    </fieldset>
+
+    <br></br>
+
+    <button onclick="newUser()">enviar</button>
+
+    <!--Aquí va la tabla con los usuarios-->
+    <div id="tabla">
+
+    </div>
+   
+    <div id="estadisticas">
+    </div>
+
+</body>
+
+<script src="ej03.js"></script>
+</html>

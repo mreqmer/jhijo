@@ -1,19 +1,12 @@
+
 let listaUsuarios = [];
 let usuariosJSON;
+
 let numeroUsuarios=0;
-let sumaEdades;
+let sumaEdades=0;
 let media=0;
 let edadMax = Number.MIN_SAFE_INTEGER;
 let edadMin = Number.MAX_SAFE_INTEGER;
-
-$('input:checkbox').on('change', function() {
-    if($('input:checkbox[name="hobbies"]').filter(':checked').length > 3){
-        alert("Selecciona un máximo de 3 hobbies");
-        $(this).prop('checked', false);
-    }
-});
-
-
 
 function newUser() {
 
@@ -22,19 +15,12 @@ function newUser() {
     var apellidos = document.getElementById("apellidos").value;
     var edad = parseInt(document.getElementById("edad").value);
     var ciudad = document.getElementById("ciudad").value;
-    var listaHobbies = $('input[name="hobbies"]')
-        .filter(':checked')
-        .map(function () {
-              return $(this).val();
-         }
-        ).get();
 
     let usuario = {
         nombrePersona: nombre,
         apellidosPersona: apellidos,
         edadPersona: edad,
-        ciudadPersona: ciudad,
-        hobbiesPersona : listaHobbies
+        ciudadPersona: ciudad
     }
 
     
@@ -45,6 +31,8 @@ function newUser() {
         usuariosJSON = serializa();
 
         generaTabla(usuariosJSON);
+
+
 
         numeroUsuarios++;
         insertaEstadisticas();
@@ -71,7 +59,6 @@ function generaTabla(usuariosJSON){
                                 "<th>Apellidos</th>" +
                                 "<th>Edad</th>" +
                                 "<th>Ciudad</th>" +
-                                "<th>Hobies</th>"+
                                 "</tr>" +
                         "</thead>" +
                         "<tbody id=\"tablaUsuarios\">" +
@@ -93,7 +80,6 @@ function newRow(element) {
                     "<td>" + element.apellidosPersona + "</td>" +
                     "<td>" + element.edadPersona + "</td>" +
                     "<td>" + element.ciudadPersona + "</td>" +
-                    "<td>" + hobbiesString(element) + "</td>"+
                 "</tr>");
 
     // Añade la fila al contenedor
@@ -114,42 +100,16 @@ function datosCorrectos(persona){
     if(persona.nombrePersona != "" && persona.apellidosPersona != "" && persona.edadPersona > 0 && persona.ciudadPersona != ""){
 
         correcto = true;
-        
+
     }
 
     return correcto;
 
 };
 
-function calculos(){
 
-    sumaEdades = 0; 
-    numeroUsuarios = 0;
-    media = 0;
-    
-    listaUsuarios.forEach(objeto => {
-    sumaEdades += objeto.edadPersona;
-
-    if(objeto.edadPersona > edadMax){
-        edadMax = objeto.edadPersona;
-    }
-    if(objeto.edadPersona < edadMin){
-        edadMin = objeto.edadPersona;
-    }
-
-    if(objeto!=null){
-        numeroUsuarios++;
-    }
-
-    })
-    
-    media = sumaEdades/numeroUsuarios;
-}
 
 function insertaEstadisticas(){
-
-    calculos();
-
     $("#estadisticas").html("<p>" + "Suma: " + sumaEdades +
     "<br>" + "Media: " + media +
     "<br>" + "Mínimo: " + edadMin + 
@@ -166,6 +126,10 @@ function deleteUser(){
     listaUsuarios.forEach()
 }
 
+function findUser(){
+    var indice = listaUsuarios.findIndex()
+}
+
 
 function serializa(){
 
@@ -173,10 +137,3 @@ function serializa(){
 
     return cadenaJSON;
 }
-
-function hobbiesString(element){
-        var cadena = element.hobbiesPersona.join( "<br>");
-        
-        return cadena;
-}
-

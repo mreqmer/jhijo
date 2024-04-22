@@ -1,5 +1,6 @@
 
 let listaUsuarios = [];
+let usuariosJSON;
 
 let numeroUsuarios=0;
 let sumaEdades=0;
@@ -27,14 +28,14 @@ function newUser() {
     if(datosCorrectos(usuario)){
     
         anadeUsuario(usuario);
-        newRow(usuario);
-    
+        usuariosJSON = serializa();
+
+        generaTabla(usuariosJSON);
+
+
+
         numeroUsuarios++;
-        sumaEdades += usuario.edadPersona;
-        media = sumaEdades / numeroUsuarios;
-        edadMin = min(usuario, edadMin);
-        edadMax = max(usuario, edadMax);
-        estadisticas();
+        insertaEstadisticas();
 
         
 
@@ -45,9 +46,11 @@ function newUser() {
 
 };
 
-function generaTabla(){
+//genera la tabla del html
+function generaTabla(usuariosJSON){
 
-    let listadoPersona = JSON.parse(serializa(listaUsuarios));
+    let listaDescerializada = JSON.parse(usuariosJSON);
+
     
     let htmlTabla = "<table>" +
                          "<thead>" + 
@@ -58,33 +61,37 @@ function generaTabla(){
                                 "<th>Ciudad</th>" +
                                 "</tr>" +
                         "</thead>" +
-                        "<tbody id='tablaUsuarios'>" +
+                        "<tbody id=\"tablaUsuarios\">" +
                         "</tbody>" +
                     "</table>"
 
     $("#tabla").html(htmlTabla);
 
-    foreach(){
-        newRow(listadopersona)
-    }
-
     
-
+    listaDescerializada.forEach(
+        newRow
+    );
 }
 
-function newRow(listadoPersona) {
+function newRow(element) {
+    // Construye la fila como un objeto jQuery
+    let fila =  $("#tablaUsuarios").append("<tr onclick=\"deleteRow(this)\"> " +
+                    "<td>" + element.nombrePersona + "</td>" +
+                    "<td>" + element.apellidosPersona + "</td>" +
+                    "<td>" + element.edadPersona + "</td>" +
+                    "<td>" + element.ciudadPersona + "</td>" +
+                "</tr>");
 
-   //esto está asi para borrar todo lo anterior ya que si ponemos en el for each html hace cosas raras y si no ponemos el html con "" se genera el array completo cada vez
-   $("#tablaUsuarios").html("");
-    //si pones append se añade todo el rato, si pones html se añade y se borra cada vez
-    listadoPersona.forEach(element => {$("#tablaUsuarios").append("<tr>" +
-                                        "<td>" + element.nombrePersona + "</td>" +
-                                        "<td>" + element.apellidosPersona + "</td>" +
-                                        "<td>" + element.edadPersona + "</td>" +
-                                        "<td>" + element.ciudadPersona + "</td>" +
-                                        "</tr>")});
+    // Añade la fila al contenedor
+    $("#tablaUsuarios").append(fila);
 
-};
+    // Devuelve la fila construida
+    return fila;
+}
+
+function deleteRow(row){
+    $(row).remove();
+}
 
 function datosCorrectos(persona){
 
@@ -100,26 +107,9 @@ function datosCorrectos(persona){
 
 };
 
-function min(persona, minimo) {
-    let minimoActual = minimo;
-    
-    if(persona.edadPersona < minimoActual){
-        minimoActual = persona.edadPersona;
-    }
-    return minimoActual;
-} 
 
-function max(persona, maximo) {
-    let maximoActual = maximo;
 
-    if(persona.edadPersona > maximoActual){
-        maximoActual = persona.edadPersona;
-    }
-
-    return maximoActual;
-}
-
-function estadisticas(){
+function insertaEstadisticas(){
     $("#estadisticas").html("<p>" + "Suma: " + sumaEdades +
     "<br>" + "Media: " + media +
     "<br>" + "Mínimo: " + edadMin + 
@@ -131,6 +121,15 @@ function anadeUsuario(persona){
     listaUsuarios.push(persona);
 
 }
+
+function deleteUser(){
+    listaUsuarios.forEach()
+}
+
+function findUser(){
+    var indice = listaUsuarios.findIndex()
+}
+
 
 function serializa(){
 

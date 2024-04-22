@@ -38,17 +38,20 @@ function newUser() {
 
 };
 
+//al borrar un tr no modifica datos de la sumaEdades, etc ya que está calculado a lo bruto
 function newRow(persona) {
 
-    $("#tablaUsuarios").append("<tr>" +
+    $("#tablaUsuarios").append("<tr onclick=\"deleteRow(this)\"> " +
         "<td>" + persona.nombrePersona + "</td>" +
         "<td>" + persona.apellidosPersona + "</td>" +
         "<td>" + persona.edadPersona + "</td>" +
         "<td>" + persona.ciudadPersona + "</td>" +
         "</tr>")
-
-
 };
+
+function deleteRow(row){
+    $(row).remove();
+}
 
 function datosCorrectos(persona){
 

@@ -35,17 +35,3 @@ function newRow(persona) {
 
 
 };
-
-
-
-/*function newRow(usuarioObj){ 
-
-    return "<tr>" + 
-                    "<td>" + usuarioObj.nombreU + "</td>" +
-                    "<td>" + usuarioObj.apellidosU + "</td>" +
-                    "<td>" + usuarioObj.edadU + "</td>" + 
-                    "<td>" + usuarioObj.ciudadU + "</td>" +
-            "</tr>"; 
-
-};
-*/

@@ -1,5 +1,5 @@
 let listaUsuarios = [];
-let usuariosJSON;
+let usuariosJSON = [];
 let numeroUsuarios=0;
 let sumaEdades;
 let media=0;
@@ -11,7 +11,7 @@ $('input:checkbox').on('change', function() {
         alert("Selecciona un máximo de 3 hobbies");
         $(this).prop('checked', false);
     }
-});
+    });
 
 function newUser() {
 
@@ -39,9 +39,10 @@ function newUser() {
 
     if(datosCorrectos(usuario)){
     
+        
         anadeUsuario(usuario);
         usuariosJSON = serializa();
-
+        envio(usuariosJSON)
         generaTabla(usuariosJSON);
 
         numeroUsuarios++;
@@ -163,6 +164,41 @@ function anadeUsuario(persona){
 function deleteUser(){
     listaUsuarios.forEach()
 }
+
+function solicitud(){
+    const xhr = new XMLHttpRequest();
+    xhr.open("GET", "https://lm.iesnervion.es/eco.php");
+    xhr.responseType = "json"; // Si no se indica, necesitará parseo
+
+// Preparamos a continuación la recepción
+    xhr.onload = function() {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+            const data = xhr.response;
+            console.log(data);
+        } else {
+            console.log("Error: ${xhr.status}");
+        }
+    };
+    xhr.send();
+}
+
+
+function envio(objeto_js){
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", "https://lm.iesnervion.es/eco.php");
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+// Preparamos a continuación la respuesta
+    xhr.onload = function() {
+        if (xhr.readyState == 4 && xhr.status == 201) { // 200 || 201
+            console.log(JSON.parse(xhr.responseText));
+        } else {
+            console.log("Error: ${xhr.status}");
+        }
+    };
+    xhr.send(objeto_js);
+}
+
 
 
 function serializa(){

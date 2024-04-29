@@ -1,55 +1,44 @@
 let listaUsuarios = [];
-let usuariosJSON = [];
+let usuariosJSON;
 let numeroUsuarios=0;
-let sumaEdades;
+let sumaEdades=0;
 let media=0;
 let edadMax = Number.MIN_SAFE_INTEGER;
 let edadMin = Number.MAX_SAFE_INTEGER;
+
 
 $('input:checkbox').on('change', function() {
     if($('input:checkbox[name="hobbies"]').filter(':checked').length > 3){
         alert("Selecciona un máximo de 3 hobbies");
         $(this).prop('checked', false);
     }
-    });
+});
 
 function newUser() {
 
-    //se puede hacer con las dos formas, la mejor es el de nombre con jquery
-    var nombre = $("#nombre").val();
-    var apellidos = document.getElementById("apellidos").value;
-    var edad = parseInt(document.getElementById("edad").value);
-    var ciudad = document.getElementById("ciudad").value;
-    var listaHobbies = $('input[name="hobbies"]')
-        .filter(':checked')
-        .map(function () {
-              return $(this).val();
-         }
-        ).get();
+    var listaHobbies = listaHobbies = $('input[name="hobbies"]')
+                                        .filter(':checked')
+                                        .map(function () {
+                                        return $(this).val();
+                                        }
+                                        ).get()                                
 
-    let usuario = {
-        nombrePersona: nombre,
-        apellidosPersona: apellidos,
-        edadPersona: edad,
-        ciudadPersona: ciudad,
-        hobbiesPersona : listaHobbies
+    //objeto usuario
+     let usuario = {
+    nombre: $("#nombre").val(),
+    apellidos: $("#apellidos").val(),
+    edad: parseInt($("#edad").val()),
+    ciudad: $("#ciudad").val(),
+    hobbies: listaHobbies
     }
 
-    
-
     if(datosCorrectos(usuario)){
-    
-        
         anadeUsuario(usuario);
         usuariosJSON = serializa();
-        envio(usuariosJSON)
+        envio(usuariosJSON);
         generaTabla(usuariosJSON);
         solicitud();
-        numeroUsuarios++;
         insertaEstadisticas();
-
-        
-
     }else{
         alert("Faltan datos");
     }
@@ -70,7 +59,7 @@ function generaTabla(usuariosJSON){
                                 "<th>Apellidos</th>" +
                                 "<th>Edad</th>" +
                                 "<th>Ciudad</th>" +
-                                "<th>Hobies</th>"+
+                                "<th>Hobbies</th>" +
                                 "</tr>" +
                         "</thead>" +
                         "<tbody id=\"tablaUsuarios\">" +
@@ -80,19 +69,19 @@ function generaTabla(usuariosJSON){
     $("#tabla").html(htmlTabla);
 
     
-    listaDescerializada.forEach(
-        newRow
-    );
+    for (let i=0; i<listaUsuarios.length; i++){
+        newRow(listaUsuarios[i], i)
+    };
 }
 
-function newRow(element) {
+function newRow(element, indice) {
     // Construye la fila como un objeto jQuery
-    let fila =  $("#tablaUsuarios").append("<tr onclick=\"deleteRow(this)\"> " +
-                    "<td>" + element.nombrePersona + "</td>" +
-                    "<td>" + element.apellidosPersona + "</td>" +
-                    "<td>" + element.edadPersona + "</td>" +
-                    "<td>" + element.ciudadPersona + "</td>" +
-                    "<td>" + hobbiesString(element) + "</td>"+
+    let fila =  $("#tablaUsuarios").append("<tr id=\"fila_" + indice + "\" onclick=\"deleteUser(" + indice + ")\">"  +
+                    "<td>" + element.nombre + "</td>" +
+                    "<td>" + element.apellidos + "</td>" +
+                    "<td>" + element.edad + "</td>" +
+                    "<td>" + element.ciudad + "</td>" +
+                    "<td>" + hobbiesString(element) + "</td>" +
                 "</tr>");
 
     // Añade la fila al contenedor
@@ -102,30 +91,37 @@ function newRow(element) {
     return fila;
 }
 
-function deleteRow(row){
-    $(row).remove();
+
+function deleteUser(indice) {
+    listaUsuarios.splice(indice, 1);
+    $("#fila_" + indice).remove();
+    insertaEstadisticas();
 }
 
 function datosCorrectos(persona){
 
     let correcto = false;
 
-    if(persona.nombrePersona != "" && persona.apellidosPersona != "" && persona.edadPersona > 0 && persona.ciudadPersona != ""){
+    if(persona.nombre != "" && persona.apellidos != "" && persona.edad > 0 && persona.ciudad != ""){
 
         correcto = true;
-        
+
     }
 
     return correcto;
 
 };
 
+
 function insertaEstadisticas(){
 
-    $("#estadisticas").html("<p>" + "Suma: " + sumaEdades +
-    "<br>" + "Media: " + media +
-    "<br>" + "Mínimo: " + edadMin + 
-    "<br>" + "Máximo: " + edadMax + "</p>");
+    let calculosJSON = solicitud();
+    //console.log(calculosJSON);
+
+   // $("#estadisticas").html("<p>" + "Suma: " + calculosJSON.suma +
+    //"<br>" + "Media: " + media +
+    //"<br>" + "Mínimo: " + edadMin + 
+    //"<br>" + "Máximo: " + edadMax + "</p>");
 }
 
 function anadeUsuario(persona){
@@ -134,8 +130,33 @@ function anadeUsuario(persona){
 
 }
 
-function deleteUser(){
-    listaUsuarios.forEach()
+function serializa(){
+
+   let cadenaJSON = JSON.stringify(listaUsuarios);
+
+    return cadenaJSON;
+}
+
+function hobbiesString(element){
+    var cadena = element.hobbies.join( "<br>");
+    
+    return cadena;
+}
+
+function envio(objeto_js){
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", "https://lm.iesnervion.es/eco.php");
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+// Preparamos a continuación la respuesta
+    xhr.onload = function() {
+        if (xhr.readyState == 4 && xhr.status == 201) { // 200 || 201
+            console.log(JSON.parse(xhr.responseText));
+        } else {
+            console.log("Error: ${xhr.status}");
+        }
+    };
+    xhr.send(objeto_js);
 }
 
 function solicitud(){
@@ -154,36 +175,3 @@ function solicitud(){
     };
     xhr.send();
 }
-
-
-function envio(objeto_js){
-    const xhr = new XMLHttpRequest();
-    xhr.open("POST", "https://lm.iesnervion.es/eco.php");
-    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-
-// Preparamos a continuación la respuesta
-    xhr.onload = function() {
-        if (xhr.readyState == 4 && xhr.status == 201) { // 200 || 201
-            console.log(JSON.parse(xhr.responseText));
-        } else {
-            console.log("Error: ${xhr.status}");
-        }
-    };
-    xhr.send(objeto_js);
-}
-
-
-
-function serializa(){
-
-   let cadenaJSON = JSON.stringify(listaUsuarios);
-
-    return cadenaJSON;
-}
-
-function hobbiesString(element){
-        var cadena = element.hobbiesPersona.join( "<br>");
-        
-        return cadena;
-}
-

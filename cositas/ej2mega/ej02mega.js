@@ -57,7 +57,7 @@ function generaTabla(usuariosJSON){
 
 function newRow(element, indice) {
     // Construye la fila como un objeto jQuery
-    let fila =  $("#tablaUsuarios").append("<tr id=\""+indice+"\" onclick=\"deleteUser("+indice+")\">" +
+    let fila =  $("#tablaUsuarios").append("<tr id=\"fila_" + indice + "\" onclick=\"deleteUser(" + indice + ")\">"  +
                     "<td>" + element.nombre + "</td>" +
                     "<td>" + element.apellidos + "</td>" +
                     "<td>" + element.edad + "</td>" +
@@ -72,12 +72,11 @@ function newRow(element, indice) {
 }
 
 
-function deleteUser(indice){
-   listaUsuarios.splice(indice,1);
-   insertaEstadisticas();
-   $("\"#" + indice + "\"").remove();
+function deleteUser(indice) {
+    listaUsuarios.splice(indice, 1);
+    $("#fila_" + indice).remove();
+    insertaEstadisticas();
 }
-
 //borra filas de la tabla
 function deleteRow(){
    
@@ -102,23 +101,23 @@ function calculos(){
     sumaEdades = 0; 
     numeroUsuarios = 0;
     media = 0;
+    edadMax = Number.MIN_SAFE_INTEGER;
+    edadMin = Number.MAX_SAFE_INTEGER;
+    edad = 0,
     
-    listaUsuarios.forEach(objeto => {
-    sumaEdades += objeto.edad;
-
-    if(objeto.edad > edadMax){
-        edadMax = objeto.edad;
-    }
-    if(objeto.edad < edadMin){
-        edadMin = objeto.edad;
-    }
-
-    if(objeto!=null){
-        numeroUsuarios++;
-    }
-
-    })
-    media = sumaEdades/numeroUsuarios;
+     listaUsuarios.forEach(objeto => {
+        if (objeto !== null) {
+            sumaEdades += objeto.edad;
+            if (objeto.edad > edadMax) {
+                edadMax = objeto.edad;
+            }
+            if (objeto.edad < edadMin) {
+                edadMin = objeto.edad;
+            }
+            numeroUsuarios++;
+        }
+    });
+    media = sumaEdades / numeroUsuarios;
 }
 
 function insertaEstadisticas(){

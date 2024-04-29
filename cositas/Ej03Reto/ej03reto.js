@@ -7,6 +7,13 @@ let edadMax = Number.MIN_SAFE_INTEGER;
 let edadMin = Number.MAX_SAFE_INTEGER;
 
 
+$('input:checkbox').on('change', function() {
+    if($('input:checkbox[name="hobbies"]').filter(':checked').length > 3){
+        alert("Selecciona un máximo de 3 hobbies");
+        $(this).prop('checked', false);
+    }
+});
+
 function newUser() {
 
     var listaHobbies = listaHobbies = $('input[name="hobbies"]')

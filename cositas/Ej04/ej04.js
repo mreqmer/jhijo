@@ -44,7 +44,7 @@ function newUser() {
         usuariosJSON = serializa();
         envio(usuariosJSON)
         generaTabla(usuariosJSON);
-
+        solicitud();
         numeroUsuarios++;
         insertaEstadisticas();
 
@@ -120,34 +120,7 @@ function datosCorrectos(persona){
 
 };
 
-function calculos(){
-
-    sumaEdades = 0; 
-    numeroUsuarios = 0;
-    media = 0;
-    
-    listaUsuarios.forEach(objeto => {
-    sumaEdades += objeto.edadPersona;
-
-    if(objeto.edadPersona > edadMax){
-        edadMax = objeto.edadPersona;
-    }
-    if(objeto.edadPersona < edadMin){
-        edadMin = objeto.edadPersona;
-    }
-
-    if(objeto!=null){
-        numeroUsuarios++;
-    }
-
-    })
-    
-    media = sumaEdades/numeroUsuarios;
-}
-
 function insertaEstadisticas(){
-
-    calculos();
 
     $("#estadisticas").html("<p>" + "Suma: " + sumaEdades +
     "<br>" + "Media: " + media +

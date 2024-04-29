@@ -6,17 +6,12 @@ let edadMin = Number.MAX_SAFE_INTEGER;
 
 function newUser() {
 
-    //se puede hacer con las dos formas, la mejor es el de nombre con jquery
-    var nombre = $("#nombre").val();
-    var apellidos = document.getElementById("apellidos").value;
-    var edad = parseInt(document.getElementById("edad").value);
-    var ciudad = document.getElementById("ciudad").value;
-
+    //objeto usuario
     let usuario = {
-        nombrePersona: nombre,
-        apellidosPersona: apellidos,
-        edadPersona: edad,
-        ciudadPersona: ciudad
+        nombre: $("#nombre").val(),
+        apellidos: $("#apellidos").val(),
+        edad: parseInt($("#edad").val()),
+        ciudad: $("#ciudad").val()
     }
 
    
@@ -24,40 +19,38 @@ function newUser() {
 
         newRow(usuario);
         numeroUsuarios++;
-        sumaEdades += usuario.edadPersona;
+        sumaEdades += usuario.edad;
         media = sumaEdades / numeroUsuarios;
         edadMin = min(usuario, edadMin);
         edadMax = max(usuario, edadMax);
         estadisticas();
-
-       
     }else{
         alert("Faltan datos");
     }
-
-
 };
 
 //al borrar un tr no modifica datos de la sumaEdades, etc ya que está calculado a lo bruto
 function newRow(persona) {
 
     $("#tablaUsuarios").append("<tr onclick=\"deleteRow(this)\"> " +
-        "<td>" + persona.nombrePersona + "</td>" +
-        "<td>" + persona.apellidosPersona + "</td>" +
-        "<td>" + persona.edadPersona + "</td>" +
-        "<td>" + persona.ciudadPersona + "</td>" +
+        "<td>" + persona.nombre + "</td>" +
+        "<td>" + persona.apellidos + "</td>" +
+        "<td>" + persona.edad + "</td>" +
+        "<td>" + persona.ciudad + "</td>" +
         "</tr>")
 };
 
+//borra filas de la tabla
 function deleteRow(row){
     $(row).remove();
 }
 
+//comprueba que estén todos los campos rellenos
 function datosCorrectos(persona){
 
     let correcto = false;
 
-    if(persona.nombrePersona != "" && persona.apellidosPersona != "" && persona.edadPersona > 0 && persona.ciudadPersona != ""){
+    if(persona.nombre != "" && persona.apellidos != "" && persona.edad > 0 && persona.ciudad != ""){
 
         correcto = true;
 
@@ -67,25 +60,28 @@ function datosCorrectos(persona){
 
 };
 
+//edad mínima
 function min(persona, minimo) {
     let minimoActual = minimo;
     
-    if(persona.edadPersona < minimoActual){
-        minimoActual = persona.edadPersona;
+    if(persona.edad < minimoActual){
+        minimoActual = persona.edad
     }
     return minimoActual;
 } 
 
+//edad máxima
 function max(persona, maximo) {
     let maximoActual = maximo;
 
-    if(persona.edadPersona > maximoActual){
-        maximoActual = persona.edadPersona;
+    if(persona.edad > maximoActual){
+        maximoActual = persona.edad;
     }
 
     return maximoActual;
 }
 
+//inserta las estadísticas de edades
 function estadisticas(){
     $("#estadisticas").html("<p>" + "Suma: " + sumaEdades +
     "<br>" + "Media: " + media +

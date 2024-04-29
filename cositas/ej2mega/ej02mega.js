@@ -1,7 +1,5 @@
-
 let listaUsuarios = [];
 let usuariosJSON;
-
 let numeroUsuarios=0;
 let sumaEdades=0;
 let media=0;
@@ -10,35 +8,19 @@ let edadMin = Number.MAX_SAFE_INTEGER;
 
 function newUser() {
 
-    //se puede hacer con las dos formas, la mejor es el de nombre con jquery
-    var nombre = $("#nombre").val();
-    var apellidos = document.getElementById("apellidos").value;
-    var edad = parseInt(document.getElementById("edad").value);
-    var ciudad = document.getElementById("ciudad").value;
-
-    let usuario = {
-        nombrePersona: nombre,
-        apellidosPersona: apellidos,
-        edadPersona: edad,
-        ciudadPersona: ciudad
+    //objeto usuario
+     let usuario = {
+    nombre: $("#nombre").val(),
+    apellidos: $("#apellidos").val(),
+    edad: parseInt($("#edad").val()),
+    ciudad: $("#ciudad").val()
     }
 
-    
-
     if(datosCorrectos(usuario)){
-    
         anadeUsuario(usuario);
         usuariosJSON = serializa();
-
         generaTabla(usuariosJSON);
-
-
-
-        numeroUsuarios++;
         insertaEstadisticas();
-
-        
-
     }else{
         alert("Faltan datos");
     }
@@ -68,18 +50,18 @@ function generaTabla(usuariosJSON){
     $("#tabla").html(htmlTabla);
 
     
-    listaDescerializada.forEach(
-        newRow
-    );
+    for (let i=0; i<listaUsuarios.length; i++){
+        newRow(listaUsuarios[i], i)
+    };
 }
 
-function newRow(element) {
+function newRow(element, indice) {
     // Construye la fila como un objeto jQuery
-    let fila =  $("#tablaUsuarios").append("<tr onclick=\"deleteRow(this)\"> " +
-                    "<td>" + element.nombrePersona + "</td>" +
-                    "<td>" + element.apellidosPersona + "</td>" +
-                    "<td>" + element.edadPersona + "</td>" +
-                    "<td>" + element.ciudadPersona + "</td>" +
+    let fila =  $("#tablaUsuarios").append("<tr id=\""+indice+"\" onclick=\"deleteUser("+indice+")\">" +
+                    "<td>" + element.nombre + "</td>" +
+                    "<td>" + element.apellidos + "</td>" +
+                    "<td>" + element.edad + "</td>" +
+                    "<td>" + element.ciudad + "</td>" +
                 "</tr>");
 
     // Añade la fila al contenedor
@@ -89,15 +71,23 @@ function newRow(element) {
     return fila;
 }
 
-function deleteRow(row){
-    $(row).remove();
+
+function deleteUser(indice){
+   listaUsuarios.splice(indice,1);
+   insertaEstadisticas();
+   $("\"#" + indice + "\"").remove();
+}
+
+//borra filas de la tabla
+function deleteRow(){
+   
 }
 
 function datosCorrectos(persona){
 
     let correcto = false;
 
-    if(persona.nombrePersona != "" && persona.apellidosPersona != "" && persona.edadPersona > 0 && persona.ciudadPersona != ""){
+    if(persona.nombre != "" && persona.apellidos != "" && persona.edad > 0 && persona.ciudad != ""){
 
         correcto = true;
 
@@ -107,9 +97,34 @@ function datosCorrectos(persona){
 
 };
 
+function calculos(){
 
+    sumaEdades = 0; 
+    numeroUsuarios = 0;
+    media = 0;
+    
+    listaUsuarios.forEach(objeto => {
+    sumaEdades += objeto.edad;
+
+    if(objeto.edad > edadMax){
+        edadMax = objeto.edad;
+    }
+    if(objeto.edad < edadMin){
+        edadMin = objeto.edad;
+    }
+
+    if(objeto!=null){
+        numeroUsuarios++;
+    }
+
+    })
+    media = sumaEdades/numeroUsuarios;
+}
 
 function insertaEstadisticas(){
+
+    calculos();
+
     $("#estadisticas").html("<p>" + "Suma: " + sumaEdades +
     "<br>" + "Media: " + media +
     "<br>" + "Mínimo: " + edadMin + 
@@ -121,15 +136,6 @@ function anadeUsuario(persona){
     listaUsuarios.push(persona);
 
 }
-
-function deleteUser(){
-    listaUsuarios.forEach()
-}
-
-function findUser(){
-    var indice = listaUsuarios.findIndex()
-}
-
 
 function serializa(){
 

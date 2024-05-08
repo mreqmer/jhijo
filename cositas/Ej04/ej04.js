@@ -1,11 +1,6 @@
 let listaUsuarios = [];
 let usuariosJSON;
-let numeroUsuarios=0;
-let sumaEdades=0;
-let media=0;
-let edadMax = Number.MIN_SAFE_INTEGER;
-let edadMin = Number.MAX_SAFE_INTEGER;
-
+let datos;
 
 $('input:checkbox').on('change', function() {
     if($('input:checkbox[name="hobbies"]').filter(':checked').length > 3){
@@ -16,7 +11,7 @@ $('input:checkbox').on('change', function() {
 
 function newUser() {
 
-    var listaHobbies = listaHobbies = $('input[name="hobbies"]')
+     var listaHobbies = listaHobbies = $('input[name="hobbies"]')
                                         .filter(':checked')
                                         .map(function () {
                                         return $(this).val();
@@ -37,8 +32,7 @@ function newUser() {
         usuariosJSON = serializa();
         envio(usuariosJSON);
         generaTabla(usuariosJSON);
-        solicitud();
-        insertaEstadisticas();
+        
     }else{
         alert("Faltan datos");
     }
@@ -113,15 +107,13 @@ function datosCorrectos(persona){
 };
 
 
-function insertaEstadisticas(){
+function insertaEstadisticas(datos){
+   // console.log(datos.calculos);
 
-    let calculosJSON = solicitud();
-    //console.log(calculosJSON);
-
-   // $("#estadisticas").html("<p>" + "Suma: " + calculosJSON.suma +
-    //"<br>" + "Media: " + media +
-    //"<br>" + "Mínimo: " + edadMin + 
-    //"<br>" + "Máximo: " + edadMax + "</p>");
+   $("#estadisticas").html("<p>" + "Suma: " + datos.calculos["suma"] +
+    "<br>" + "Media: " + datos.calculos["media"] +
+    "<br>" + "Mínimo: " + datos.calculos["min"] + 
+    "<br>" + "Máximo: " + datos.calculos["max"] + "</p>");
 }
 
 function anadeUsuario(persona){
@@ -146,12 +138,14 @@ function hobbiesString(element){
 function envio(objeto_js){
     const xhr = new XMLHttpRequest();
     xhr.open("POST", "https://lm.iesnervion.es/eco.php");
-    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    xhr.responseType = "json";
 
 // Preparamos a continuación la respuesta
     xhr.onload = function() {
         if (xhr.readyState == 4 && xhr.status == 201) { // 200 || 201
-            console.log(JSON.parse(xhr.responseText));
+           datos = xhr.response;
+           insertaEstadisticas(datos);
+           console.log(datos.calculos["suma"])
         } else {
             console.log("Error: ${xhr.status}");
         }
@@ -159,19 +153,5 @@ function envio(objeto_js){
     xhr.send(objeto_js);
 }
 
-function solicitud(){
-    const xhr = new XMLHttpRequest();
-    xhr.open("GET", "https://lm.iesnervion.es/eco.php");
-    xhr.responseType = "json"; // Si no se indica, necesitará parseo
 
-// Preparamos a continuación la recepción
-    xhr.onload = function() {
-        if (xhr.readyState == 4 && xhr.status == 200) {
-            const data = xhr.response;
-            console.log(data);
-        } else {
-            console.log("Error: ${xhr.status}");
-        }
-    };
-    xhr.send();
-}
+
